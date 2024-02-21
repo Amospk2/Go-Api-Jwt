@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"api/routes"
+	"api/infra/routes"
 )
 
 func run(ctx context.Context) error {
@@ -18,8 +18,8 @@ func run(ctx context.Context) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
 
-	mux := routes.NewServer()
-	
+	mux := routes.NewServer(map[string]string{"DATABASE_URL": os.Getenv("DATABASE_URL")})
+
 	httpServer := &http.Server{
 		Addr:         "0.0.0.0:9999",
 		WriteTimeout: 15 * time.Second,

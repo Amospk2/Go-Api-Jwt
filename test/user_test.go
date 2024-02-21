@@ -1,7 +1,8 @@
 package main
 
 import (
-	"api/controllers"
+	"api/infra/controllers"
+	"api/infra/database"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -10,7 +11,9 @@ import (
 
 func TestUserListWhenIsOk(t *testing.T) {
 
-	ctl := controllers.NewController("user")
+	ctl := controllers.NewController(
+		database.NewConnect("postgresql://postgres:postgres@localhost:5432/postgres"),
+	)
 
 	req, err := http.NewRequest("GET", "/users", nil)
 	if err != nil {
@@ -28,7 +31,7 @@ func TestUserListWhenIsOk(t *testing.T) {
 	}
 
 	// Check the response body is what we expect.
-	expected := `{"users":["user"]}`
+	expected := `{"users":null}`
 
 	if strings.TrimSpace(rr.Body.String()) != string(expected) {
 		t.Errorf("handler returned unexpected body: got %v want %v",
@@ -38,7 +41,9 @@ func TestUserListWhenIsOk(t *testing.T) {
 
 func TestUserListWhenHasQuery(t *testing.T) {
 
-	ctl := controllers.NewController("user")
+	ctl := controllers.NewController(
+		database.NewConnect("postgresql://postgres:postgres@localhost:5432/postgres"),
+	)
 
 	req, err := http.NewRequest("GET", "/users?test=11", nil)
 	if err != nil {
@@ -56,7 +61,7 @@ func TestUserListWhenHasQuery(t *testing.T) {
 	}
 
 	// Check the response body is what we expect.
-	expected := `{"users":["user"]}`
+	expected := `{"users":null}`
 
 	if strings.TrimSpace(rr.Body.String()) != string(expected) {
 		t.Errorf("handler returned unexpected body: got %v want %v",
