@@ -15,9 +15,13 @@ func addRoutes(mux *mux.Router, controller *controllers.UserController) {
 
 func NewServer(env map[string]string) *mux.Router {
 	mux := mux.NewRouter()
+
 	connect := database.NewConnect(env["DATABASE_URL"])
+
 	controller := controllers.NewController(connect)
 	addRoutes(mux, controller)
+
 	mux.Use(middleware.ApplicationTypeSet)
+
 	return mux
 }

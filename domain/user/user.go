@@ -2,9 +2,9 @@ package user
 
 type Users struct {
 	Id    string `json:"id,omitempty"`
-	Name  string `json:"name,omitempty"`
-	Email string `json:"email,omitempty"`
-	Age   string `json:"age,omitempty"`
+	Name  string `json:"name" validate:"required,max=32"`
+	Email string `json:"email" validate:"required,max=32"`
+	Age   string `json:"age" validate:"required"`
 }
 
 func NewUser(id string,
