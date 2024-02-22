@@ -11,8 +11,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-
 	"github.com/jackc/pgx/v5/pgxpool"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserController struct {
@@ -125,7 +125,21 @@ func (c *UserController) CreateUser() http.HandlerFunc {
 				return
 			}
 
+			findUser, err := c.repository.GetByEmail(user.Email)
+
+			if err == nil && findUser.Id != "" {
+				w.WriteHeader(http.StatusUnprocessableEntity)
+				return
+			}
+
 			user.Id = uuid.NewString()
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			user.Password = string(hashedPassword)
 
 			if err = c.repository.Create(user); err != nil {
 				log.Fatal(err)
@@ -137,7 +151,7 @@ func (c *UserController) CreateUser() http.HandlerFunc {
 	)
 }
 
-func NewController(pool *pgxpool.Pool) *UserController {
+func NewUserController(pool *pgxpool.Pool) *UserController {
 	return &UserController{
 		repository: user.NewUserRepository(pool),
 	}

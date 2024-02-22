@@ -6,11 +6,12 @@ import (
 	"api/infra/middleware"
 
 	"github.com/gorilla/mux"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func addRoutes(mux *mux.Router, controller *controllers.UserController) {
-	r := NewUserRouter(controller)
-	r.Load(mux)
+func addRoutes(mux *mux.Router, pool *pgxpool.Pool) {
+	NewUserRouter(controllers.NewUserController(pool)).Load(mux)
+	NewAuthRouter(controllers.NewAuthController(pool)).Load(mux)
 }
 
 func NewServer(env map[string]string) *mux.Router {
@@ -18,8 +19,7 @@ func NewServer(env map[string]string) *mux.Router {
 
 	connect := database.NewConnect(env["DATABASE_URL"])
 
-	controller := controllers.NewController(connect)
-	addRoutes(mux, controller)
+	addRoutes(mux, connect)
 
 	mux.Use(middleware.ApplicationTypeSet)
 

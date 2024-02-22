@@ -11,7 +11,7 @@ import (
 
 func TestUserListWhenIsOk(t *testing.T) {
 
-	ctl := controllers.NewController(
+	ctl := controllers.NewUserController(
 		database.NewConnect("postgresql://postgres:postgres@localhost:5432/postgres"),
 	)
 
@@ -41,7 +41,7 @@ func TestUserListWhenIsOk(t *testing.T) {
 
 func TestUserListWhenHasQuery(t *testing.T) {
 
-	ctl := controllers.NewController(
+	ctl := controllers.NewUserController(
 		database.NewConnect("postgresql://postgres:postgres@localhost:5432/postgres"),
 	)
 
