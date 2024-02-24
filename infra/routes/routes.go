@@ -9,9 +9,10 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func addRoutes(mux *mux.Router, pool *pgxpool.Pool) {
-	NewUserRouter(controllers.NewUserController(pool)).Load(mux)
-	NewAuthRouter(controllers.NewAuthController(pool)).Load(mux)
+func addRoutes(muxR *mux.Router, pool *pgxpool.Pool) {
+	NewUserRouter(controllers.NewUserController(pool)).Load(muxR)
+	NewAuthRouter(controllers.NewAuthController(pool)).Load(muxR)
+	muxR.Use(mux.CORSMethodMiddleware(muxR))
 }
 
 func NewServer(env map[string]string) *mux.Router {

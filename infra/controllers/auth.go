@@ -4,6 +4,7 @@ import (
 	"api/infra/database"
 	"encoding/json"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -47,7 +48,7 @@ func (c *AuthController) Login() http.HandlerFunc {
 					"user": user.Email,
 					"exp":  time.Now().Add(time.Duration(time.Hour * 1)).Unix(),
 				},
-			).SignedString([]byte("secret"))
+			).SignedString([]byte(os.Getenv("SECRET")))
 
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
