@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"api/domain/user"
-	"api/domain/utils"
+	"api/infra/database"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -16,7 +16,7 @@ import (
 )
 
 type UserController struct {
-	repository *user.UserRepository
+	repository *database.UserRepository
 }
 
 func (c *UserController) GetUsers() http.HandlerFunc {
@@ -120,7 +120,7 @@ func (c *UserController) CreateUser() http.HandlerFunc {
 
 			err := json.NewDecoder(r.Body).Decode(&user)
 
-			if err != nil || !utils.Valid(&user) {
+			if err != nil || !user.Valid() {
 				w.WriteHeader(http.StatusUnprocessableEntity)
 				return
 			}
@@ -153,6 +153,6 @@ func (c *UserController) CreateUser() http.HandlerFunc {
 
 func NewUserController(pool *pgxpool.Pool) *UserController {
 	return &UserController{
-		repository: user.NewUserRepository(pool),
+		repository: database.NewUserRepository(pool),
 	}
 }

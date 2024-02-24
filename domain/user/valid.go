@@ -1,12 +1,8 @@
-package utils
+package user
 
-import (
-	"api/domain/user"
-	"time"
-)
+import "time"
 
-func Valid(user *user.Users) bool {
-
+func (user Users) Valid() bool {
 	if len(user.Name) == 0 && user.Name == "" {
 		return false
 	}
