@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"api/domain/user"
+	"api/infra/database"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -17,7 +17,7 @@ type AuthRequest struct {
 }
 
 type AuthController struct {
-	repository *user.UserRepository
+	repository *database.UserRepository
 }
 
 func (c *AuthController) Login() http.HandlerFunc {
@@ -61,6 +61,6 @@ func (c *AuthController) Login() http.HandlerFunc {
 
 func NewAuthController(pool *pgxpool.Pool) *AuthController {
 	return &AuthController{
-		repository: user.NewUserRepository(pool),
+		repository: database.NewUserRepository(pool),
 	}
 }
