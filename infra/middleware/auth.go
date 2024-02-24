@@ -29,7 +29,7 @@ func AuthenticationMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			},
 		)
 
-		if parsedAccessToken.Valid {
+		if !parsedAccessToken.Valid {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
